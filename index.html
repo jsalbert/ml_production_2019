@@ -49,15 +49,6 @@ We'll focus on two things:
 
 ---
 
-# Download slides and code
-
-Slides are online at:
-
-https://jsalbert.github.io/ml_production_2019/
-
----
-
-
 # Palladium: Overview
 
 
@@ -73,10 +64,8 @@ BI*:
 - High scalability
 - Avoid license costs
 
-A presentation of Palladium from PyData 2016 is found [here
-(PDF)](./resources/palladium-pydata-lattner.pdf).
-
-We will start by implementing a classifier with Palladium
+A presentation of Palladium from PyData 2016 can be found here
+[(PDF)](./resources/palladium-pydata-lattner.pdf).
 
 ---
 
@@ -92,16 +81,17 @@ Create a virtual environment and activate it
 ```bash
 $ pip3 install virtualenv
 $ python3 -m venv ml_prod_env
-$ cd ml_prod_env
-$ source bin/activate  or: `scripts/activate.bat` on Windows
+$ source ml_prod_env/bin/activate  or: `ml_prod_env/scripts/activate.bat` on Windows
 ```
 
-Install environment requirements (will install all the libraries specified in requirements.txt)
+Install environment requirements (will install all the dependencies specified in requirements.txt)
 ```bash
 $ pip install -r step1/requirements.txt
 ```
 
-If you want to use Conda instead because maybe you're on Windows and don't have Visual Code installed:
+If you want to use [Conda](https://conda.io) instead because maybe
+you're on Windows and don't have Visual Code installed:
+
 ```bash
 $ conda install ujson
 $ pip install -r step1/requirements.txt
@@ -109,10 +99,20 @@ $ pip install -r step1/requirements.txt
 
 ---
 
+# Step 1
+
+We will start by implementing a flower classifier with Palladium
+
+<p align="center">
+  <img width="397" height="333" src="./resources/flower.png">
+</p>
+
+---
+
 # Iris dataset
 
 In our first example in `step1`, we will make use of the classic
-"Iris" machine learning dataset from 1936.
+"Iris" [machine learning dataset from 1936](https://archive.ics.uci.edu/ml/datasets/iris).
 
 `step1/iris.data` contains the data in CSV format.  Note that the
 first line for column names is missing:
@@ -138,16 +138,18 @@ The columns are:
 # Iris as a classification problem
 
 We want to implement a classifier that predicts the species based on
-the four attributes.
+the four attributes. There are 3 different plant species (setosa, versicolor, virginica).
 
-![:scale 50%](./resources/iris-scatter.png)
+The next graph shows a scatterplot of each sample features:
+
+![:scale 50%](./resources/iris-scatter.png) 
 
 ---
 
 # Palladium: Reading the dataset
 
 You'll find a configuration file in `step1/config.py`.  Therein,
-you'll find the definition of two `dataset_loader`s, which are
+you'll find the definition of two `dataset_loaders`, which are
 responsible for reading the dataset:
 
 ```python
@@ -177,6 +179,14 @@ responsible for reading the dataset:
 
 ---
 
+# Palladium: Reading the dataset
+
+The target_column defines which of the columns should be used as the value to be predicted; this is the last column, which we named species. The `nrows` parameter tells Table to return only the first hundred samples from our CSV file.
+
+If you take a look at the next section in the config file, which is dataset_loader_test, you will notice that it is very similar to the first one. In fact, the only difference between dataset_loader_train and dataset_loader_test is that the latter uses a different subset of the samples available in the same CSV file. So instead of using nrows, dataset_loader_test uses the `skiprows` parameter and thus skips the first hundred examples (in order to separate training and testing data)
+
+---
+
 # Palladium: Configuration and code separated
 
 Palladium encourages the separation of configuration and code.
@@ -201,11 +211,11 @@ configuration.  Here are some examples:
         'C': 0.1,
 ```
 
-- Differing configuration for production and development environments
-
 ---
 
 # Palladium: Model definition
+
+- Differing configuration for production and development environments
 
 ```python
     'model': {
@@ -227,32 +237,6 @@ out of scikit-learn.
 The `model_persister` entry defines where we'll save the trained model
 and where to read it back from.  The configuration above configures a
 SQLite database to act as the model storage.
-
----
-
-# Palladium: Installation
-
-Let's install Palladium.  We'll first create a
-[virtualenv](https://virtualenv.pypa.io), and install dependencies
-therein:
-
-```bash
-$ python3 -m venv .
-$ source bin/activate  # or: `scripts/activate.bat` on Windows
-$ pip install -U pip
-$ pip install -r step1/requirements.txt
-Collecting palladium (from -r step1/requirements.txt (line 1))...
-...
-Successfully installed ...
-```
-
-If you want to use [Conda](https://conda.io) instead because maybe
-you're on Windows and don't have Visual Code installed:
-
-```bash
-$ conda install ujson
-$ pip install -r step1/requirements.txt
-```
 
 ---
 
@@ -288,9 +272,25 @@ on the test set.
 
 ---
 
+# Palladium: Training a model
+
+If you run again the same command:
+
+```bash
+$ pld-fit --evaluate
+```
+
+You will observe that it outputs `Wrote model with version 2`. The next call to pld-test will use that newer model to run tests. To test the first model that you trained, run:
+
+```bash
+pld-test --model-version=1
+```
+
+---
+
 # Regularization
 
-So what is this `C` parameter of our model about?
+So what is this `C` parameter in our model configuration about?
 
 ![:scale 80%](./resources/ng-regularized-lr.png)
 
@@ -312,7 +312,7 @@ improves?
 
 ---
 
-# Grid Search
+# Step 2: Grid Search
 
 The search for optimal hyperparameters is a very common task in
 machine learning.  In our example, doing the search by hand was still
@@ -369,7 +369,30 @@ score.
 
 ---
 
-# Palladium: Webservice
+# Grid Search: Interpreting the output
+
+Notice that we applied Cross Validation in our training data with three folds:
+
+```
+        params  split0_test_score  split1_test_score  split2_test_score  
+4  {'C': 1000}           1.000000           0.969697            1.00000   
+3   {'C': 100}           1.000000           0.939394            1.00000   
+2    {'C': 10}           1.000000           0.909091            0.96875   
+1     {'C': 1}           1.000000           0.878788            0.96875   
+0   {'C': 0.1}           0.914286           0.757576            0.84375 
+```
+
+You can also ask to save these results by passing a CSV filename to the `--save-results` option. 
+
+If you want to save the best model out of the grid search, run `pld-grid-search` with the `--persist-best` flag.
+
+```bash
+pld-grid-search --persist-best
+```
+
+---
+
+# Step 3: Webservice & Python API
 
 Palladium implements a simple webservice, with which we can address
 our trained model via HTTP and make predictions.
@@ -393,7 +416,7 @@ You can find this configuration in `step3/config.py`.
 
 ---
 
-# Palladium: Running the webservice
+# Palladium: Running the Webservice
 
 ```bash
 $ cd ../step3
@@ -448,7 +471,7 @@ if __name__ == '__main__':
 
 ---
 
-# Skorch
+# Step 4: Skorch
 
 [Skorch](https://skorch.readthedocs.io/) is a scikit-learn compatible
 library for neural networks.  It's based on [PyTorch](https://pytorch.org).
@@ -667,6 +690,10 @@ learning rate (`net__lr`).  Can you find a combination that gets a
   callback allows the stopping of training if further training leads
   to no more improvements.
 
+ <p align="center">
+  <img width="576" height="396" src="./resources/validation-curve.png">
+</p>
+
 ---
 
 # Grid Search: Parallelization with Dask
@@ -702,7 +729,7 @@ $ pip install dask distributed
 We start a scheduler inside a new terminal windows:
 
 ```bash
-$ source bin/activate
+$ source ml_prod_env/bin/activate
 $ dask-scheduler
 ```
 
@@ -710,7 +737,7 @@ And a worker in another terminal window.  You may add an arbitrary
 number of these:
 
 ```bash
-$ source bin/activate  # on Windows: scripts/activate.bat
+$ source ml_prod_env/bin/activate  # on Windows: ml_prod_env/scripts/activate.bat
 $ cd step4
 $ export PYTHONPATH=.  # on Windows: set PYTHONPATH=.
 $ dask-worker 127.0.0.1:8786
@@ -747,7 +774,7 @@ $ pip install -U scikit-learn
 
 ---
 
-# Ein DatasetLoader fuer OpenML
+# A DatasetLoader for OpenML
 
 The configuration in `step5/config.py` was updated to refer to our new
 class `OpenML`, which reads our dataset from

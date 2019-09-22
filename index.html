@@ -24,7 +24,7 @@ class: center, middle
 
 # Productive machine learning in Python
 
-Daniel Nouri, Natural Vision UG, datascienceresearch.com 2018
+Adapted from Daniel Nouri, Natural Vision UG, datascienceresearch.com 2018
 
 ---
 
@@ -35,17 +35,16 @@ We'll focus on two things:
 - Development cycle and putting models into production scalably
 - Common tasks in Machine Learning projects
 
-1. Who am I?
-2. Palladium: Overview
-3. Palladium: Development cycle
-4. Hyperparameter search: Grid Search
-5. Palladium: Webservice
-6. scikit-learn: Pipelines
-7. Skorch: Neural networks
-8. Dask: Parallelisation
-9. Palladium: Datasets, OpenML
-10. Regression and classification
-11. Skorch: Sentiment analysis with RNNs
+1. Palladium: Overview
+2. Palladium: Development cycle
+3. Hyperparameter search: Grid Search
+4. Palladium: Webservice
+5. scikit-learn: Pipelines
+6. Skorch: Neural networks
+7. Dask: Parallelisation
+8. Palladium: Datasets, OpenML
+9. Regression and classification
+10. Skorch: Sentiment analysis with RNNs
 
 ---
 
@@ -54,27 +53,15 @@ We'll focus on two things:
 Download this repository to be able to run code examples:
 
 ```bash
-$ git clone https://github.com/dnouri/dsr-2018.git
+$ git clone https://github.com/jsalbert/ml_production_2019.git
 ```
 
 Slides are online at:
 
-https://dnouri.github.io/dsr-2018/
+https://jsalbert.github.io/ml_production_2019/
 
 ---
 
-# whoami
-
-- Machine Learning Consultant ([Natural Vision](http://naturalvision.de))
-  * Development and training (Python and Machine Learning)
-- Clients: Otto Group, IKEA, Luxottica
-- Strengths:
-  * Python (since 2000)
-  * Open Source (since 2003)
-  * Deep Learning (since 2014)
-  * Software development best practices (testing, pairing, tutorials)
-
----
 
 # Palladium: Overview
 
@@ -95,6 +82,26 @@ A presentation of Palladium from PyData 2016 is found [here
 (PDF)](./resources/palladium-pydata-lattner.pdf).
 
 We will start by implementing a classifier with Palladium
+
+---
+
+# Setting up the work environment
+
+```bash
+Open a terminal session and download the repository with the exercises
+$ git clone https://github.com/dnouri/dsr-2018.git
+Create a virtual environment
+$ pip3 install virtualenv
+$ python3 -m venv ml_prod_env
+$ cd ml_prod_env
+Activate the environment
+$ source bin/activate  or: `scripts/activate.bat` on Windows
+Install environment requirements (will install all the libraries specified in requirements.txt)
+$ pip install -r step1/requirements.txt
+If you want to use Conda instead because maybe you're on Windows and don't have Visual Code installed:
+$ conda install ujson
+$ pip install -r step1/requirements.txt
+```
 
 ---
 

@@ -24,7 +24,8 @@ class: center, middle
 
 # Productive machine learning in Python
 
-Adapted from Daniel Nouri, Natural Vision UG, datascienceresearch.com 2018
+Slides and code adapted from Daniel Nouri, Natural Vision UG, datascienceresearch.com 2018
+[https://github.com/dnouri/dsr-2018]
 
 ---
 
@@ -49,12 +50,6 @@ We'll focus on two things:
 ---
 
 # Download slides and code
-
-Download this repository to be able to run code examples:
-
-```bash
-$ git clone https://github.com/jsalbert/ml_production_2019.git
-```
 
 Slides are online at:
 
@@ -87,18 +82,27 @@ We will start by implementing a classifier with Palladium
 
 # Setting up the work environment
 
-```bash
+
 Open a terminal session and download the repository with the exercises
-$ git clone https://github.com/dnouri/dsr-2018.git
-Create a virtual environment
+```bash
+$ git clone https://github.com/jsalbert/ml_production_2019.git
+```
+
+Create a virtual environment and activate it
+```bash
 $ pip3 install virtualenv
 $ python3 -m venv ml_prod_env
 $ cd ml_prod_env
-Activate the environment
 $ source bin/activate  or: `scripts/activate.bat` on Windows
+```
+
 Install environment requirements (will install all the libraries specified in requirements.txt)
+```bash
 $ pip install -r step1/requirements.txt
+```
+
 If you want to use Conda instead because maybe you're on Windows and don't have Visual Code installed:
+```bash
 $ conda install ujson
 $ pip install -r step1/requirements.txt
 ```

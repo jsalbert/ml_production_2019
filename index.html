@@ -720,40 +720,6 @@ clusters via [Dask](http://dask.pydata.org):
 
 ---
 
-# Dask: Application
-
-```bash
-$ pip install dask distributed
-```
-
-We start a scheduler inside a new terminal windows:
-
-```bash
-$ source ml_prod_env/bin/activate
-$ dask-scheduler
-```
-
-And a worker in another terminal window.  You may add an arbitrary
-number of these:
-
-```bash
-$ source ml_prod_env/bin/activate  # on Windows: ml_prod_env/scripts/activate.bat
-$ cd step4
-$ export PYTHONPATH=.  # on Windows: set PYTHONPATH=.
-$ dask-worker 127.0.0.1:8786
-```
-
-Finally, we start our Grid Search like this (from inside the environment!):
-
-```bash
-$ cd step4
-$ export PALLADIUM_CONFIG=config.py,dask-config.py
-$ # or on Windows: set PALLADIUM_CONFIG=config.py,dask-config.py
-$ pld-grid-search
-```
-
----
-
 # Determine wine quality with Skorch
 
 Let's try the same neural net on a different dataset.  We'll use the
@@ -826,18 +792,26 @@ the network can be trained:
     },
 ```
 
+---
+
+# MyModule: Input and output parameters
+
+## Exercise 4 (continued)
+
 As soon as you are able to train the network (use `pld-fit`), take a
 look at the Grid Search parameters inside the configuration file.  Can
 you find a configuration of hyperparameters with which you can reach
 an accuracy of 55% or more on the `mean_test_score`?
+
+Hint: Set 'cv' value to 2 and don't put a high number of epochs because it could be very time consuming. 
+
 
 ---
 
 # Regression instead of classification
 
 We can pose the prediction of the wine quality score as a regression
-problem.  That is, instead of predicting probabilities for the 10 or
-so classes, we will try to predict a single number: the actual score
+problem.  That is, instead of predicting probabilities for the 10 classes, we will try to predict a single number: the actual score
 as a continuous value between 0 and 10.
 
 ## Exercise 5
@@ -855,13 +829,14 @@ as a continuous value between 0 and 10.
   each sample can have multiple regression targets: `target =
   target.reshape(-1, 1)`.
 
+
 ---
 
 # Random Forest instead of neural network
 
 ## Exercise 6
 
-- Rewrite the `model` entry in `step6/config.py` to use
+- Create a new folder `step7` and copy all the files from `step6`  Change the files to use
   `sklearn.ensemble.RandomForestRegressor` instead of our
   `create_pipeline` function.
 
@@ -895,7 +870,7 @@ Skorch source tree.  The implementation is already provided for you in
 model works, let's train it:
 
 ```bash
-$ cd ../step7
+$ cd ../step8
 $ pld-fit --evaluate
 ```
 
@@ -939,18 +914,12 @@ Look for `RNN_sentiment_classification.ipynb`.
 
 ---
 
-# End
+# Credits
 
 - https://github.com/ottogroup/palladium
 - https://github.com/scikit-learn/scikit-learn
 - https://github.com/dnouri/skorch
-
-
-- daniel@naturalvision.de
-- [twitter.com/dnouri](https://twitter.com/dnouri)
-- [danielnouri.org](http://danielnouri.org)
-- [naturalvision.de](http://naturalvision.de)
-- [linkedin.com/in/nouri](https://www.linkedin.com/in/nouri)
+- https://github.com/dnouri/dsr-2018
 
 ## Images
 

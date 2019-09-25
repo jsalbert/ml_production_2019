@@ -1,4 +1,4 @@
-# Deep Dive AI Machine Learning in Production Course 2019
+# AI Deep Dive Machine Learning in Production Course 2019
 
 ## Slides
 

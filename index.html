@@ -695,30 +695,6 @@ learning rate (`net__lr`).  Can you find a combination that gets a
 
 ---
 
-# Grid Search: Parallelization with Dask
-
-If we now consider adding more hyperparameters to the search, such as
-the number of neurons in our network's *hidden layer*, we'll
-understand that the search can quickly take a long time.
-
-```python
-    'grid_search': {
-        'param_grid': {  # 3 * 4 * 4 * 5 = 240 fits!
-            'net__lr': [0.03, 0.1, 0.3],
-            'net__max_epochs': [50, 100, 200, 400],
-            'net__num_units': [5, 10, 20, 40],
-        },
-```
-
-The search for the best hyperparameters is often the most
-computationally intense part of machine learning projects.  For this
-reason, scikit-learn supports the parallelization of Grid Search onto
-clusters via [Dask](http://dask.pydata.org):
-
-> Dask is a flexible library for parallel computing in Python.
-
----
-
 # Determine wine quality with Skorch
 
 Let's try the same neural net on a different dataset.  We'll use the

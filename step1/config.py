@@ -22,7 +22,7 @@
 
     'model': {
         '__factory__': 'sklearn.linear_model.LogisticRegression',
-        'C': 0.001,
+        'C': 0.1,
     },
 
     'model_persister': {
